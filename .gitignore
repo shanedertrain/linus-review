@@ -1,0 +1,6 @@
+raw/
+docs/
+held/
+logs/
+corpus.db
+__pycache__/

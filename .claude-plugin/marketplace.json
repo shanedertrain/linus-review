@@ -1,0 +1,11 @@
+{
+  "name": "linus-review",
+  "owner": { "name": "Cameron Basham" },
+  "plugins": [
+    {
+      "name": "linus-review",
+      "source": "./",
+      "description": "Code review by the standards Linus Torvalds applies to code, with every principle tied to a verified quote."
+    }
+  ]
+}

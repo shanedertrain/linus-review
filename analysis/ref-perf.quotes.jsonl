@@ -1,0 +1,15 @@
+{"principle": "ref-1", "id": "CA+55aFwhX-6DzxKMPk=NTmSGt1GNHE6XTHZcss+Q=hC-epC7cQ@mail.gmail.com", "quote": "Yes, I see the microbenchmark numbers, but those are pretty much irrelevant to real loads."}
+{"principle": "ref-1", "id": "alpine.LFD.2.00.0902250753030.3111@localhost.localdomain", "quote": "I'll take \"real numbers\" over my personal dislikes any day."}
+{"principle": "ref-2", "id": "alpine.LFD.1.10.0807070927090.11076@woody.linux-foundation.org", "quote": "I care about the speed of the *non*audit path. And you just slowed it down unnecessarily."}
+{"principle": "ref-2", "id": "Pine.LNX.4.58.0402181457470.18038@home.osdl.org", "quote": "The inexact matches should be a case of \"make them correct\". Screw performance."}
+{"principle": "ref-3", "id": "CAHk-=whe12v6dDjhYcOcfHEorwZ90+cbzD1sKLRzNyB8CWsaPw@mail.gmail.com", "quote": "In random non-core code, I want people to write it clearly and maintainably. I very much do not want random drivers doing micro-optimizations etc."}
+{"principle": "ref-4", "id": "CAHk-=whjFwzEq0u04=n=t7-kNJdX0HkAOjAMjmLXDDycJ+j9yQ@mail.gmail.com", "quote": "And contention pretty much happens in one situation, and one situation only: in a combination of (a) bad locking and (b) benchmarks."}
+{"principle": "ref-5", "id": "CAHk-=wj85tOp8WjcUp6gwstp4Cg2WT=p209S=fOzpWAgqqQPKg@mail.gmail.com", "quote": "End result: use a lock. Seriously. Anything else is going to be buggy, or going to be incredibly subtle."}
+{"principle": "ref-5", "id": "alpine.LFD.2.00.0810171235310.3438@nehalem.linux-foundation.org", "quote": "You can never do ordering on just one side."}
+{"principle": "ref-6", "id": "CAHk-=wg9dzJOkvysjgdHv5eFJU76EFAwCxNenRxTtq6VWof98Q@mail.gmail.com", "quote": "It is a very dangerous pattern, because it likely works in practice during testing, and looks like it might work. But it is completely and unfixably wrong."}
+{"principle": "ref-7", "id": "alpine.LFD.1.10.0805070800120.32269@woody.linux-foundation.org", "quote": "Performance is a feature too."}
+{"principle": "ref-7", "id": "CA+55aFy-imLQ9WeA880qR_DqKTpCiH2-3ou6_NScBGOKGE=-fQ@mail.gmail.com", "quote": "Speed doesn't matter for garbage."}
+{"principle": "ref-8", "id": "CA+55aFyAW5tGqZA8kx7kMrMp0Zm0H1ohXVM4thZPOcnZeoosSg@mail.gmail.com", "quote": "we can't do inlining, we can't optimize locking, we can't do anything clever."}
+{"principle": "ref-9", "id": "alpine.LFD.2.02.1107221023170.29055@i5.linux-foundation.org", "quote": "just the pointer chasing is expensive, especially since even cached loads aren't small enough to fit in L1."}
+{"principle": "ref-10", "id": "CA+55aFwxYK-BLH0crhySHaQvAYHOH-VGUi7WTd1aq-24+WTDYw@mail.gmail.com", "quote": "So you're potentially making things worse for just about everybody, in order to fix a problem that almost nobody can actually see."}
+{"principle": "ref-11", "id": "alpine.LFD.2.00.0811171522030.18283@nehalem.linux-foundation.org", "quote": "it's, oh, about infinitely faster to do than to use kmalloc()."}

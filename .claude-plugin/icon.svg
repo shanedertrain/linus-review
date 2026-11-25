@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <rect width="1024" height="1024" rx="200" fill="#12161c"/>
+  <!-- a diff: two removed lines, one added -->
+  <g font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-weight="700" font-size="120">
+    <rect x="112" y="170" width="800" height="150" rx="24" fill="#3b1519"/>
+    <text x="150" y="288" fill="#ff6b6b">-</text>
+    <rect x="250" y="222" width="560" height="46" rx="23" fill="#ff6b6b" opacity=".85"/>
+    <rect x="112" y="350" width="800" height="150" rx="24" fill="#3b1519"/>
+    <text x="150" y="468" fill="#ff6b6b">-</text>
+    <rect x="250" y="402" width="380" height="46" rx="23" fill="#ff6b6b" opacity=".85"/>
+    <rect x="112" y="530" width="800" height="150" rx="24" fill="#12331f"/>
+    <text x="150" y="648" fill="#4ade80">+</text>
+    <rect x="250" y="582" width="250" height="46" rx="23" fill="#4ade80" opacity=".9"/>
+  </g>
+  <!-- the verdict, stamped across it -->
+  <g transform="rotate(-11 600 700)">
+    <rect x="352" y="590" width="560" height="250" rx="34" fill="#12161c" stroke="#ffb020" stroke-width="26"/>
+    <text x="632" y="778" text-anchor="middle" font-family="DejaVu Sans, Liberation Sans, sans-serif" font-weight="700" font-size="190" letter-spacing="14" fill="#ffb020">NAK</text>
+  </g>
+</svg>

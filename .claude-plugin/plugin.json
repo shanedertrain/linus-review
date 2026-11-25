@@ -1,0 +1,10 @@
+{
+  "name": "linus-review",
+  "version": "0.1.0",
+  "description": "Code review by the standards Linus Torvalds applies to code, in any language, with every principle tied to a verified quote. Plain voice by default; classic voice on request.",
+  "author": { "name": "Cameron Basham" },
+  "homepage": "https://github.com/shanedertrain/linus-review",
+  "repository": "https://github.com/shanedertrain/linus-review",
+  "license": "MIT",
+  "keywords": ["code-review", "skill", "linus-torvalds"]
+}

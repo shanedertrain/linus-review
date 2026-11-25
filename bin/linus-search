@@ -1,0 +1,90 @@
+#!/usr/bin/env python3
+"""Search the Linus Torvalds corpus (corpus.db). Standard library only.
+
+  linus-search "<fts5 query>" [--source S] [--kind K] [--reviews-code] [--from YYYY-MM-DD] [--to YYYY-MM-DD]
+                              [--limit N] [--json]
+  linus-search --id <id>        print one full document
+  linus-search --stats          counts by source, kind, year
+FTS5 syntax: words are ANDed; "exact phrase"; OR; NOT; prefix*; title:word; NEAR(a b, 5).
+"""
+import argparse, json, os, re, sqlite3, sys, textwrap
+
+DB = os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "corpus.db")
+
+
+def connect():
+    if not os.path.exists(DB):
+        sys.exit("corpus.db not found: run scripts/build_db.py")
+    con = sqlite3.connect(f"file:{DB}?mode=ro", uri=True)
+    con.row_factory = sqlite3.Row
+    return con
+
+
+def stats(con):
+    for title, sql in (("source", "SELECT source k, count(*) n FROM docs GROUP BY 1 ORDER BY 2 DESC"),
+                       ("kind", "SELECT kind k, count(*) n FROM docs GROUP BY 1 ORDER BY 2 DESC"),
+                       ("year", "SELECT substr(date,1,4) k, count(*) n FROM docs GROUP BY 1 ORDER BY 1")):
+        print(f"by {title}:")
+        for r in con.execute(sql):
+            print(f"  {r['k'] or '(none)':<14}{r['n']:>8}")
+    r = con.execute("SELECT count(*) n, sum(reviews_code) c FROM docs").fetchone()
+    print(f"total {r['n']}, reviews_code {r['c']}")
+
+
+def one(con, id_):
+    r = con.execute("SELECT * FROM docs WHERE id=?", (id_,)).fetchone()
+    if not r:
+        sys.exit(f"no document with id {id_!r}")
+    print(f"id: {r['id']}\nsource: {r['source']}  kind: {r['kind']}  date: {r['date']}  venue: {r['venue']}")
+    print(f"title: {r['title']}\nurl: {r['url']}\nin_reply_to: {r['in_reply_to']}  reviews_code: {bool(r['reviews_code'])}\n")
+    print(r["body"])
+
+
+def fts_quote(q):
+    return q
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("query", nargs="?")
+    ap.add_argument("--source"); ap.add_argument("--kind")
+    ap.add_argument("--reviews-code", action="store_true")
+    ap.add_argument("--from", dest="dfrom"); ap.add_argument("--to", dest="dto")
+    ap.add_argument("--limit", type=int, default=20)
+    ap.add_argument("--json", action="store_true")
+    ap.add_argument("--id"); ap.add_argument("--stats", action="store_true")
+    a = ap.parse_args()
+    con = connect()
+    if a.stats:
+        return stats(con)
+    if a.id:
+        return one(con, a.id)
+    if not a.query:
+        ap.error("need a query, --id or --stats")
+    where, params = ["docs_fts MATCH ?"], [a.query]
+    if a.source: where.append("d.source=?"); params.append(a.source)
+    if a.kind: where.append("d.kind=?"); params.append(a.kind)
+    if a.reviews_code: where.append("d.reviews_code=1")
+    if a.dfrom: where.append("d.date>=?"); params.append(a.dfrom)
+    if a.dto: where.append("d.date<=?"); params.append(a.dto + "T23:59:59Z" if len(a.dto) == 10 else a.dto)
+    sql = ("SELECT d.id, d.date, d.venue, d.title, d.url, d.source, d.kind, d.reviews_code, "
+           "snippet(docs_fts, 1, '[', ']', ' ... ', 24) snip, bm25(docs_fts, 5.0, 1.0) rank "
+           "FROM docs_fts JOIN docs d ON d.rowid=docs_fts.rowid WHERE " + " AND ".join(where) +
+           " ORDER BY rank LIMIT ?")
+    params.append(a.limit)
+    try:
+        rows = con.execute(sql, params).fetchall()
+    except sqlite3.OperationalError as e:
+        sys.exit(f"FTS query error: {e} (quote phrases, e.g. '\"foo-bar\"'; hyphens and colons need quotes)")
+    if a.json:
+        print(json.dumps([{k: r[k] for k in r.keys() if k != "rank"} | {"reviews_code": bool(r["reviews_code"])} for r in rows], ensure_ascii=False, indent=1))
+        return
+    for i, r in enumerate(rows, 1):
+        snip = re.sub(r"\s+", " ", r["snip"]).strip()
+        print(f"{i}. {r['date'][:10]} {r['source']}/{r['kind']} [{r['venue']}]{' CR' if r['reviews_code'] else ''}\n   {r['title']}\n   id: {r['id']}\n   {r['url']}\n   {snip}")
+    if not rows:
+        print("no hits")
+
+
+if __name__ == "__main__":
+    main()
